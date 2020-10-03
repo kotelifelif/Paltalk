@@ -41,6 +41,7 @@ private:
     QSqlDatabase db;
 
     QGridLayout *grid;
+    QWidget *widget;
 };
 
 #endif
