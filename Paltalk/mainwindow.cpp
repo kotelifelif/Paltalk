@@ -1,7 +1,13 @@
 #include <QtWidgets>
+#include<QVariant>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "category.h"
+#include "subcategory.h"
+#include "treeitem.h"
 #include "treemodel.h"
+
 
 //! [0]
 MainWindow::MainWindow()
@@ -14,6 +20,11 @@ MainWindow::MainWindow()
     connectToDb();
 
     resize(400, 600);
+}
+
+MainWindow::~MainWindow()
+{
+    db.close();
 }
 
 void MainWindow::createActions()
@@ -75,21 +86,40 @@ void MainWindow::showAllRooms()
     //view->show();
 
     // Выбор подкатегорий
+    TreeModel *categoryModel = new TreeModel;
+    QStringList cols;
+    cols << "Name" << "CategoryID" << "SubcategoryID";
+    categoryModel->setColumns(cols);
     for (int i = 0; i < categoriesModel->rowCount(); ++i) {
         QSqlRelationalTableModel *subcategoriesModel = new QSqlRelationalTableModel(nullptr, db);
         subcategoriesModel->setTable("\"Subcategories\"");
         subcategoriesModel->setRelation(2, QSqlRelation("\"Subcategories\"", "\"CategoryID\"", "\"Name\""));
-        QVector<QVariant> categoryData;
-        categoryData.append(categoriesModel->record(i).value("Name"));
-        //TreeItem categoryItem(categoryData, nullptr);
-        QTreeWidgetItem *categoryItem = new QTreeWidgetItem();
-        categoryItem->setText(0, categoriesModel->record(i).value("Name").toString());
+
+        QString name = categoriesModel->record(i).value("Name").toString();
+        QUuid categoryId = categoriesModel->record(i).value("CategoryID").toUuid();
+        Category *category = new Category(categoryId, name);
+        QVector<Category> categoryData;
+        //categoryData.append(category);
+
+        TreeItem parentItem(QVariant::fromValue(category));
+        QVector<Subcategory> subcategoryData;
+        QObject *cat = new QObject();
+        categoryModel->addItem(cat, QModelIndex());
         for (int j = 0; j < subcategoriesModel->rowCount(); ++j) {
-          //categoryItem->addChild();
-          categoryWidget->insertTopLevelItem(i, new QTreeWidgetItem);
+            QString name = subcategoriesModel->record(j).value("Name").toString();
+            QUuid categoryId = subcategoriesModel->record(j).value("CategoryID").toUuid();
+            QUuid subcategoryId = subcategoriesModel->record(j).value("SubategoryID").toUuid();
+            Subcategory subcategory(subcategoryId, categoryId, name);
+            subcategoryData.append(subcategory);
+
+            TreeItem childItem(QVariant::fromValue(subcategory), &parentItem);
+            parentItem.appendChild(&childItem);
         }
     }
-    categoryWidget->show();
+    QTreeView *view = new QTreeView();
+    view->setModel(categoryModel);
+    view->show();
+
     grid->addWidget(new QWidget(), 0, 0);
 
 
