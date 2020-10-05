@@ -13,6 +13,7 @@ SOURCES += \
     category.cpp \
     main.cpp \
     mainwindow.cpp \
+    room.cpp \
     subcategory.cpp \
     treeitem.cpp \
     treemodel.cpp
@@ -20,6 +21,7 @@ SOURCES += \
 HEADERS += \
     category.h \
     mainwindow.h \
+    room.h \
     subcategory.h \
     treeitem.h \
     treemodel.h

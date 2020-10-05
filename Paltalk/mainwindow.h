@@ -25,6 +25,7 @@ private slots:
     void showRecents();
     void showAllRooms();
     void showMyRooms();
+    void showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem);
 private:
     void connectToDb();
     void createActions();
@@ -42,6 +43,7 @@ private:
 
     QGridLayout *grid;
     QWidget *widget;
+    QTreeView *categoryView;
 };
 
 #endif

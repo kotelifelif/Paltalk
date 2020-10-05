@@ -7,7 +7,7 @@
 #include "subcategory.h"
 #include "treeitem.h"
 #include "treemodel.h"
-
+#include "room.h"
 
 //! [0]
 MainWindow::MainWindow()
@@ -15,11 +15,13 @@ MainWindow::MainWindow()
     grid = new QGridLayout;
     QWidget *widget = new QWidget;
     setCentralWidget(widget);
+    widget->setLayout(grid);
     //grid->addWidget(widget);
     createActions();
     connectToDb();
 
     resize(400, 600);
+    showAllRooms();
 }
 
 MainWindow::~MainWindow()
@@ -88,12 +90,12 @@ void MainWindow::showAllRooms()
     for (int i = 0; i < categoriesModel->rowCount(); ++i) {
         QSqlRelationalTableModel *subcategoriesModel = new QSqlRelationalTableModel(nullptr, db);
         subcategoriesModel->setTable("\"Subcategories\"");
-        subcategoriesModel->setRelation(2, QSqlRelation("\"Categories\"", "\"CategoryID\"", "\"Name\""));
+        subcategoriesModel->setRelation(2, QSqlRelation("\"Categories\"", "\"CategoryID\"", "\"CategoryID\""));
         subcategoriesModel->select();
 
 
-        QString name = categoriesModel->record(i).value("Name").toString();
         QUuid categoryId = categoriesModel->record(i).value("CategoryID").toUuid();
+        QString name = categoriesModel->record(i).value("Name").toString();
         Category *category = new Category(categoryId, name);
         QVector<Category> categoryData;
 
@@ -101,9 +103,13 @@ void MainWindow::showAllRooms()
         category->setProperty("CategoryID", categoryId);
         categoryModel->addItem(category, QModelIndex());
         for (int j = 0; j < subcategoriesModel->rowCount(); ++j) {
-            QString name = subcategoriesModel->record(j).value("Name").toString();
-            QUuid categoryId = subcategoriesModel->record(j).value("CategoryID").toUuid();
-            QUuid subcategoryId = subcategoriesModel->record(j).value("SubategoryID").toUuid();
+            name = subcategoriesModel->record(j).value("Name").toString();
+            QUuid subcategoryId = subcategoriesModel->record(j).value("SubcategoryID").toUuid();
+            categoryId = subcategoriesModel->record(j).value("CategoryID").toUuid();
+
+            if (categoryId != category->CategoryId)
+                continue;
+
             Subcategory *subcategory = new Subcategory(subcategoryId, categoryId, name);
             subcategory->setParent(category);
             subcategory->setProperty("Name", name);
@@ -112,18 +118,47 @@ void MainWindow::showAllRooms()
         }
 
     }
-    QTreeView *view = new QTreeView();
-    view->setModel(categoryModel);
-    view->show();
-
-    grid->addWidget(view, 0, 0);
-    // Для отображения комнат
-    grid->addWidget(new QWidget(), 0, 1);
-
+    categoryView = new QTreeView();
+    categoryView->setModel(categoryModel);
+    grid->addWidget(categoryView, 0, 0);
+    //showSubcategoryRooms();
+    connect(categoryView->selectionModel(),
+      SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+      SLOT(showSubcategoryRooms(const QItemSelection &, const QItemSelection &))
+     );
 }
 
 void MainWindow::showMyRooms()
 {
 
 }
+
+void MainWindow::showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem)
+{
+    Q_UNUSED(deselectedItem);
+    // Для отображения комнат
+    QVBoxLayout *roomLayout = new QVBoxLayout();
+    grid->addLayout(roomLayout, 0, 1);
+    //QVariant selectedSubcategory = categoryView->model()->data(index);
+    QUuid id("39e4b5f7-5392-457f-a638-438e8c0b5864");
+    QSqlRelationalTableModel *roomModel = new QSqlRelationalTableModel(nullptr, db);
+    roomModel->setTable("\"Rooms\"");
+    roomModel->setRelation(3, QSqlRelation("\"Subcategories\"", "\"SubcategoryID\"", "\"SubcategoryID\""));
+    roomModel->select();
+    for (int i = 0; i < roomModel->rowCount(); ++i) {
+        QUuid roomId = roomModel->record(i).value("RoomID").toUuid();
+        QString name = roomModel->record(i).value("Name").toString();
+        QUuid ownerId = roomModel->record(i).value("OwnerID").toUuid();
+        QUuid subcategoryId = roomModel->record(i).value("SubcategoryID").toUuid();
+
+        if (id != subcategoryId)
+            continue;
+
+        Room room(roomId, name, ownerId, subcategoryId);
+        QLabel *roomLabel = new QLabel;
+        roomLabel->setText(room.Name);
+        roomLayout->addWidget(roomLabel);
+    }
+}
+
 
