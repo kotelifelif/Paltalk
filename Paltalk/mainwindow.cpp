@@ -59,12 +59,7 @@ void MainWindow::createMenus()
 
 }
 
-void MainWindow::showRecents()
-{
-
-}
-
-void MainWindow::showAllRooms()
+void MainWindow::clearItems()
 {
     // Очистить виджет
     for(int i = 0;i<grid->rowCount();i++) {
@@ -73,7 +68,16 @@ void MainWindow::showAllRooms()
                 if(item != NULL) delete item;
             }
         }
+}
 
+void MainWindow::showRecents()
+{
+
+}
+
+void MainWindow::showAllRooms()
+{
+    clearItems();
     // Для отображения категорий и подкатегорий
     QVBoxLayout *categories_box = new QVBoxLayout;
     // Выбор категорий
@@ -137,10 +141,9 @@ void MainWindow::showSubcategoryRooms(const QItemSelection &selectedItem, const 
 {
     Q_UNUSED(deselectedItem);
     // Для отображения комнат
+    QList<QModelIndex> indexes = selectedItem.indexes();
     QVBoxLayout *roomLayout = new QVBoxLayout();
     grid->addLayout(roomLayout, 0, 1);
-    //QVariant selectedSubcategory = categoryView->model()->data(index);
-    QUuid id("39e4b5f7-5392-457f-a638-438e8c0b5864");
     QSqlRelationalTableModel *roomModel = new QSqlRelationalTableModel(nullptr, db);
     roomModel->setTable("\"Rooms\"");
     roomModel->setRelation(3, QSqlRelation("\"Subcategories\"", "\"SubcategoryID\"", "\"SubcategoryID\""));
@@ -149,9 +152,12 @@ void MainWindow::showSubcategoryRooms(const QItemSelection &selectedItem, const 
         QUuid roomId = roomModel->record(i).value("RoomID").toUuid();
         QString name = roomModel->record(i).value("Name").toString();
         QUuid ownerId = roomModel->record(i).value("OwnerID").toUuid();
-        QUuid subcategoryId = roomModel->record(i).value("SubcategoryID").toUuid();
+        QUuid roomSubcategoryId = roomModel->record(i).value("SubcategoryID").toUuid();
 
-        if (id != subcategoryId)
+        QModelIndex index = selectedItem.indexes().at(2);
+        QUuid subcategoryId = index.data().toUuid();
+
+        if (subcategoryId != roomSubcategoryId)
             continue;
 
         Room room(roomId, name, ownerId, subcategoryId);

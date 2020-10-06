@@ -30,6 +30,7 @@ private:
     void connectToDb();
     void createActions();
     void createMenus();
+    void clearItems();
 
     QMenu *recentsMenu;
     QMenu *allRoomsMenu;
