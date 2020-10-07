@@ -8,7 +8,7 @@
 class Subcategory : public QObject
 {
 public:
-    Subcategory(const QUuid &subcategoryId = nullptr, const QUuid &categoryId = nullptr, const QString &name = nullptr);
+    Subcategory(const QUuid &subcategoryId = QUuid(), const QUuid &categoryId = QUuid(), const QString &name = QString());
     QUuid SubcategoryId;
     QUuid CategoryId;
     QString Name;

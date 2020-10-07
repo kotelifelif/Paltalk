@@ -9,7 +9,7 @@ class Category : public QObject
 {
 public:
     Category();
-    Category(const QUuid &categoryId = nullptr, const QString &name = nullptr);
+    Category(const QUuid &categoryId = QUuid(), const QString &name = QString());
     QUuid CategoryId;
     QString Name;
 };

@@ -16,7 +16,8 @@ SOURCES += \
     room.cpp \
     subcategory.cpp \
     treeitem.cpp \
-    treemodel.cpp
+    treemodel.cpp \
+    user.cpp
 
 HEADERS += \
     category.h \
@@ -24,7 +25,8 @@ HEADERS += \
     room.h \
     subcategory.h \
     treeitem.h \
-    treemodel.h
+    treemodel.h \
+    user.h
 
 FORMS += \
     mainwindow.ui
