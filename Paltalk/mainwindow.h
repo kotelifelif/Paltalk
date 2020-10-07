@@ -30,7 +30,7 @@ private:
     void connectToDb();
     void createActions();
     void createMenus();
-    void clearItems();
+    void clearItems(QLayout *layout);
 
     QMenu *recentsMenu;
     QMenu *allRoomsMenu;
@@ -43,6 +43,7 @@ private:
     QSqlDatabase db;
 
     QGridLayout *grid;
+    QVBoxLayout *roomLayout;
     QWidget *widget;
     QTreeView *categoryView;
 };

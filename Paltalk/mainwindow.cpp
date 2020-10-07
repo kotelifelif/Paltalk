@@ -13,6 +13,7 @@
 MainWindow::MainWindow()
 {
     grid = new QGridLayout;
+    roomLayout = new QVBoxLayout;
     QWidget *widget = new QWidget;
     setCentralWidget(widget);
     widget->setLayout(grid);
@@ -59,15 +60,14 @@ void MainWindow::createMenus()
 
 }
 
-void MainWindow::clearItems()
+void MainWindow::clearItems(QLayout *layout)
 {
     // Очистить виджет
-    for(int i = 0;i<grid->rowCount();i++) {
-            for(int j = 0;j<grid->columnCount();j++) {
-                QLayoutItem* item = grid->takeAt(i*grid->rowCount() + j);
-                if(item != NULL) delete item;
-            }
-        }
+    QLayoutItem *child;
+    while ((child = layout->takeAt(0)) != nullptr) {
+        delete child->widget(); // delete the widget
+        delete child;   // delete the layout item
+    }
 }
 
 void MainWindow::showRecents()
@@ -77,9 +77,9 @@ void MainWindow::showRecents()
 
 void MainWindow::showAllRooms()
 {
-    clearItems();
+    clearItems(roomLayout);
+    clearItems(grid);
     // Для отображения категорий и подкатегорий
-    QVBoxLayout *categories_box = new QVBoxLayout;
     // Выбор категорий
     QSqlRelationalTableModel *categoriesModel = new QSqlRelationalTableModel(nullptr, db);
     categoriesModel->setTable("\"Categories\"");
@@ -120,30 +120,47 @@ void MainWindow::showAllRooms()
             subcategory->setProperty("CategoryID", categoryId);
             subcategory->setProperty("SubcategoryID", subcategoryId);
         }
-
     }
-    categoryView = new QTreeView();
+    categoryView = new QTreeView;
     categoryView->setModel(categoryModel);
+    categoryView->expandAll();
     grid->addWidget(categoryView, 0, 0);
+    roomLayout = new QVBoxLayout;
+    grid->addLayout(roomLayout, 0, 1);
     //showSubcategoryRooms();
     connect(categoryView->selectionModel(),
       SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
       SLOT(showSubcategoryRooms(const QItemSelection &, const QItemSelection &))
      );
+    int row = 0;
+    // Ищем категорию с подкатегорией
+    QModelIndex parent(categoryView->model()->index(row, 0));
+    while(parent != QModelIndex()) {
+        if (parent.child(0, 0) != QModelIndex())
+            break;
+        ++row;
+        parent = categoryView->model()->index(row, 0);
+    }
+
+    QModelIndex topLeft(parent.child(row, 0));
+    QModelIndex bottomRight(parent.child(row, parent.column() + 1));
+    QItemSelection selection(topLeft, bottomRight);
+    categoryView->selectionModel()->select(selection,
+                                           QItemSelectionModel::SelectionFlag::Select | QItemSelectionModel::SelectionFlag::Rows);
+    //categoryView->selectAll();
 }
 
 void MainWindow::showMyRooms()
 {
-
+    //clearItems();
 }
 
 void MainWindow::showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem)
 {
     Q_UNUSED(deselectedItem);
+    clearItems(roomLayout);
     // Для отображения комнат
     QList<QModelIndex> indexes = selectedItem.indexes();
-    QVBoxLayout *roomLayout = new QVBoxLayout();
-    grid->addLayout(roomLayout, 0, 1);
     QSqlRelationalTableModel *roomModel = new QSqlRelationalTableModel(nullptr, db);
     roomModel->setTable("\"Rooms\"");
     roomModel->setRelation(3, QSqlRelation("\"Subcategories\"", "\"SubcategoryID\"", "\"SubcategoryID\""));
