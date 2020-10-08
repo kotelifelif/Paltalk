@@ -15,6 +15,8 @@ MainWindow::MainWindow()
 {
     grid = new QGridLayout;
     roomLayout = new QVBoxLayout;
+    adminRoomLayout = new QVBoxLayout;
+    followRoomLayout = new QVBoxLayout;
     QWidget *widget = new QWidget;
     setCentralWidget(widget);
     widget->setLayout(grid);
@@ -56,6 +58,17 @@ void MainWindow::connectToDb()
     db.open();
 }
 
+void MainWindow::updateLayouts()
+{
+    clearItems(roomLayout);
+    clearItems(followRoomLayout);
+    clearItems(adminRoomLayout);
+    clearItems(grid);
+    roomLayout = new QVBoxLayout;
+    followRoomLayout = new QVBoxLayout;
+    adminRoomLayout = new QVBoxLayout;
+}
+
 void MainWindow::createMenus()
 {
 
@@ -73,13 +86,34 @@ void MainWindow::clearItems(QLayout *layout)
 
 void MainWindow::showRecents()
 {
+    updateLayouts();
+    // Разделитель
+    grid->addLayout(roomLayout, 0, 0);
+    QSqlRelationalTableModel *roomsModel = new QSqlRelationalTableModel(nullptr, db);
+    roomsModel->setTable("\"Users_Rooms\"");
+    roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"Name\", \"OwnerID\", \"SubcategoryID\""));
+    roomsModel->select();
 
+    // Временная заглушка
+    User user("user", QUuid("173a6805-0948-4b05-9fec-40dcb744aa39"), "827ccb0eea8a706c4c34a16891f84e7b");
+    for (int i = 0; i < roomsModel->rowCount(); ++i) {
+        QUuid roomId = roomsModel->record(i).value("RoomID").toUuid();
+        QUuid userId = roomsModel->record(i).value("UserID").toUuid();
+        QUuid ownerId = roomsModel->record(i).value("OwnerID").toUuid();
+        QString name = roomsModel->record(i).value("Name").toString();
+
+        if (userId == user.UserId) {
+            Room room(roomId, name, ownerId);
+            QLabel *roomLabel = new QLabel;
+            roomLabel->setText(room.Name);
+            roomLayout->addWidget(roomLabel);
+        }
+    }
 }
 
 void MainWindow::showAllRooms()
 {
-    clearItems(roomLayout);
-    clearItems(grid);
+    updateLayouts();
     // Для отображения категорий и подкатегорий
     // Выбор категорий
     QSqlRelationalTableModel *categoriesModel = new QSqlRelationalTableModel(nullptr, db);
@@ -153,10 +187,7 @@ void MainWindow::showAllRooms()
 
 void MainWindow::showMyRooms()
 {
-    clearItems(roomLayout);
-    clearItems(grid);
-    QVBoxLayout *adminRoomLayout = new QVBoxLayout;
-    QVBoxLayout *followRoomLayout = new QVBoxLayout;
+    updateLayouts();
     // Разделитель
     QFrame* line = new QFrame();
     line->setFrameShape(QFrame::HLine);
@@ -188,7 +219,6 @@ void MainWindow::showMyRooms()
                 adminRoomLayout->addWidget(roomLabel);
             else if (isFollowed)
                 followRoomLayout->addWidget(roomLabel);
-            followRoomLayout->addWidget(roomLabel);
         }
     }
     QGroupBox *adminRoomGroupBox = new QGroupBox(tr("Rooms I admin"));

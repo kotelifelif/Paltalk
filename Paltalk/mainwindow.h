@@ -28,6 +28,7 @@ private slots:
     void showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem);
 private:
     void connectToDb();
+    void updateLayouts();
     void createActions();
     void createMenus();
     void clearItems(QLayout *layout);
@@ -44,6 +45,9 @@ private:
 
     QGridLayout *grid;
     QVBoxLayout *roomLayout;
+    QVBoxLayout *adminRoomLayout;
+    QVBoxLayout *followRoomLayout;
+
     QWidget *widget;
     QTreeView *categoryView;
 };
