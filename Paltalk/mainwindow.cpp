@@ -10,7 +10,6 @@
 #include "room.h"
 #include "user.h"
 
-//! [0]
 MainWindow::MainWindow()
 {
     grid = new QGridLayout;
@@ -20,7 +19,7 @@ MainWindow::MainWindow()
     QWidget *widget = new QWidget;
     setCentralWidget(widget);
     widget->setLayout(grid);
-    //grid->addWidget(widget);
+
     createActions();
     connectToDb();
 
@@ -67,11 +66,6 @@ void MainWindow::updateLayouts()
     roomLayout = new QVBoxLayout;
     followRoomLayout = new QVBoxLayout;
     adminRoomLayout = new QVBoxLayout;
-}
-
-void MainWindow::createMenus()
-{
-
 }
 
 void MainWindow::clearItems(QLayout *layout)
@@ -156,13 +150,11 @@ void MainWindow::showAllRooms()
             subcategory->setProperty("SubcategoryID", subcategoryId);
         }
     }
+
     categoryView = new QTreeView;
     categoryView->setModel(categoryModel);
     categoryView->expandAll();
-    grid->addWidget(categoryView, 0, 0);
-    roomLayout = new QVBoxLayout;
-    grid->addLayout(roomLayout, 0, 1);
-    //showSubcategoryRooms();
+
     connect(categoryView->selectionModel(),
       SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
       SLOT(showSubcategoryRooms(const QItemSelection &, const QItemSelection &))
@@ -182,27 +174,20 @@ void MainWindow::showAllRooms()
     QItemSelection selection(topLeft, bottomRight);
     categoryView->selectionModel()->select(selection,
                                            QItemSelectionModel::SelectionFlag::Select | QItemSelectionModel::SelectionFlag::Rows);
-    //categoryView->selectAll();
+    grid->addWidget(categoryView, 0, 0);
+    grid->addLayout(roomLayout, 0, 1);
 }
 
 void MainWindow::showMyRooms()
 {
     updateLayouts();
-    // Разделитель
-    QFrame* line = new QFrame();
-    line->setFrameShape(QFrame::HLine);
-    line->setFrameShadow(QFrame::Sunken);
-    grid->addLayout(adminRoomLayout, 0, 0);
-    grid->addWidget(line, 1, 0);
-    grid->addLayout(followRoomLayout, 2, 0);
     QSqlRelationalTableModel *roomsModel = new QSqlRelationalTableModel(nullptr, db);
     roomsModel->setTable("\"Users_Rooms\"");
-    roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"Name\", \"OwnerID\", \"SubcategoryID\""));
+    roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"RoomID\", \"Name\", \"OwnerID\", \"SubcategoryID\""));
     roomsModel->select();
 
     // Временная заглушка
     User user("user", QUuid("173a6805-0948-4b05-9fec-40dcb744aa39"), "827ccb0eea8a706c4c34a16891f84e7b");
-    followRoomLayout->addWidget(new QLabel("Rooms I follow"));
     for (int i = 0; i < roomsModel->rowCount(); ++i) {
         QUuid roomId = roomsModel->record(i).value("RoomID").toUuid();
         QUuid userId = roomsModel->record(i).value("UserID").toUuid();
@@ -215,16 +200,20 @@ void MainWindow::showMyRooms()
             Room room(roomId, name, ownerId);
             QLabel *roomLabel = new QLabel;
             roomLabel->setText(room.Name);
-            if (userId == ownerId || isAdmin)
+            if (userId == ownerId && isAdmin)
                 adminRoomLayout->addWidget(roomLabel);
             else if (isFollowed)
                 followRoomLayout->addWidget(roomLabel);
         }
     }
-    QGroupBox *adminRoomGroupBox = new QGroupBox(tr("Rooms I admin"));
-    adminRoomGroupBox->setLayout(adminRoomLayout);
-    QGroupBox *followRoomGroupBox = new QGroupBox(tr("Rooms I follow"));
-    followRoomGroupBox->setLayout(followRoomLayout);
+    // Разделитель
+    QFrame* line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+
+    grid->addLayout(adminRoomLayout, 0, 0);
+    grid->addWidget(line, 1, 0);
+    grid->addLayout(followRoomLayout, 2, 0);
 }
 
 void MainWindow::showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem)
