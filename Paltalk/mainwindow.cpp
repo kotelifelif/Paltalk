@@ -8,6 +8,7 @@
 #include "treeitem.h"
 #include "treemodel.h"
 #include "room.h"
+#include "user.h"
 
 //! [0]
 MainWindow::MainWindow()
@@ -155,39 +156,45 @@ void MainWindow::showMyRooms()
     clearItems(roomLayout);
     clearItems(grid);
     QVBoxLayout *adminRoomLayout = new QVBoxLayout;
-    QVBoxLayout *followRooomLayout = new QVBoxLayout;
+    QVBoxLayout *followRoomLayout = new QVBoxLayout;
+    // Разделитель
+    QFrame* line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
     grid->addLayout(adminRoomLayout, 0, 0);
-    grid->addLayout(followRooomLayout, 1, 0);
-
+    grid->addWidget(line, 1, 0);
+    grid->addLayout(followRoomLayout, 2, 0);
     QSqlRelationalTableModel *roomsModel = new QSqlRelationalTableModel(nullptr, db);
     roomsModel->setTable("\"Users_Rooms\"");
-    roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"Name\""));
-    roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"OwnerID\""));
-    roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"SubcategoryID\""));
+    roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"Name\", \"OwnerID\", \"SubcategoryID\""));
     roomsModel->select();
 
     // Временная заглушка
     User user("user", QUuid("173a6805-0948-4b05-9fec-40dcb744aa39"), "827ccb0eea8a706c4c34a16891f84e7b");
+    followRoomLayout->addWidget(new QLabel("Rooms I follow"));
     for (int i = 0; i < roomsModel->rowCount(); ++i) {
         QUuid roomId = roomsModel->record(i).value("RoomID").toUuid();
         QUuid userId = roomsModel->record(i).value("UserID").toUuid();
         QUuid ownerId = roomsModel->record(i).value("OwnerID").toUuid();
         QString name = roomsModel->record(i).value("Name").toString();
         bool isAdmin = roomsModel->record(i).value("IsAdmin").toBool();
+        bool isFollowed = roomsModel->record(i).value("IsFollowed").toBool();
 
         if (userId == user.UserId) {
             Room room(roomId, name, ownerId);
             QLabel *roomLabel = new QLabel;
             roomLabel->setText(room.Name);
-            roomLabel->show();
             if (userId == ownerId || isAdmin)
                 adminRoomLayout->addWidget(roomLabel);
-            else
-                followRooomLayout->addWidget(roomLabel);
-
+            else if (isFollowed)
+                followRoomLayout->addWidget(roomLabel);
+            followRoomLayout->addWidget(roomLabel);
         }
     }
-
+    QGroupBox *adminRoomGroupBox = new QGroupBox(tr("Rooms I admin"));
+    adminRoomGroupBox->setLayout(adminRoomLayout);
+    QGroupBox *followRoomGroupBox = new QGroupBox(tr("Rooms I follow"));
+    followRoomGroupBox->setLayout(followRoomLayout);
 }
 
 void MainWindow::showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem)
