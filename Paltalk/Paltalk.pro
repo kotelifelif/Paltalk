@@ -10,19 +10,29 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    abstracttab.cpp \
+    allroomstab.cpp \
     category.cpp \
     main.cpp \
     mainwindow.cpp \
+    myroomstab.cpp \
+    recentstab.cpp \
     room.cpp \
+    stylemanager.cpp \
     subcategory.cpp \
     treeitem.cpp \
     treemodel.cpp \
     user.cpp
 
 HEADERS += \
+    abstracttab.h \
+    allroomstab.h \
     category.h \
     mainwindow.h \
+    myroomstab.h \
+    recentstab.h \
     room.h \
+    stylemanager.h \
     subcategory.h \
     treeitem.h \
     treemodel.h \

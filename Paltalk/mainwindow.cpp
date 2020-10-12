@@ -1,6 +1,3 @@
-#include <QtWidgets>
-#include<QVariant>
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "category.h"
@@ -9,6 +6,13 @@
 #include "treemodel.h"
 #include "room.h"
 #include "user.h"
+#include "stylemanager.h"
+#include "allroomstab.h"
+#include "recentstab.h"
+#include "myroomstab.h"
+
+#include <QtWidgets>
+#include<QVariant>
 
 MainWindow::MainWindow()
 {
@@ -22,9 +26,10 @@ MainWindow::MainWindow()
 
     createActions();
     connectToDb();
+    //this->setStyleSheet(StyleManager::getWidgetStyle());
 
-    resize(400, 600);
-    showAllRooms();
+    resize(870, 630);
+    //showAllRooms();
 }
 
 MainWindow::~MainWindow()
@@ -36,15 +41,51 @@ void MainWindow::createActions()
 {
     recentsAction = new QAction(tr("Recents"), this);
     connect(recentsAction, &QAction::triggered, this, &MainWindow::showRecents);
-    menuBar()->addAction(recentsAction);
+    //menuBar()->addAction(recentsAction);
 
     allRoomsAction = new QAction(tr("All rooms"), this);
     connect(allRoomsAction, &QAction::triggered, this, &MainWindow::showAllRooms);
-    menuBar()->addAction(allRoomsAction);
+    //menuBar()->addAction(allRoomsAction);
 
     myRoomsAction = new QAction(tr("My rooms"), this);
     connect(myRoomsAction, &QAction::triggered, this, &MainWindow::showMyRooms);
-    menuBar()->addAction(myRoomsAction);
+    //menuBar()->addAction(myRoomsAction);
+
+
+    QFont menuBarFont;
+    menuBarFont.setPointSize(11);
+    //menuBar()->setFont(menuBarFont);
+    //menuBar()->setStyleSheet();
+
+    recentsButton = new QWidget;
+    //recentsButton->setText("Recents");
+    //recentsButton->setStyleSheet(StyleManager::getToolButtonStyle());
+    //recentsButton->setFont(menuBarFont);
+
+    allRoomsButton = new QWidget;
+    //allRoomsButton->setText("All Rooms");
+    //allRoomsButton->setStyleSheet(StyleManager::getToolButtonStyle());
+    //allRoomsButton->setFont(menuBarFont);
+
+    myRoomsButton = new QWidget;
+    //myRoomsButton->setText("My Rooms");
+    //myRoomsButton->setStyleSheet(StyleManager::getToolButtonStyle());
+    //myRoomsButton->setFont(menuBarFont);
+
+    searchEdit = new QLineEdit;
+    //searchEdit->setText("Search Room");
+
+    tabWidget = new QTabWidget;
+    tabWidget->addTab(new RecentsTab(), "Recents");
+    tabWidget->addTab(new AllRoomsTab(), "All Rooms");
+    tabWidget->addTab(new MyRoomsTab(), "My Rooms");
+    grid->addWidget(tabWidget, 0, 0);
+    //connect(allRoomsButton, &QAction::triggered, this, &MainWindow::showMyRooms);
+    //grid->addLayout(tabWidget, 0, 0, Qt::AlignTop);
+    //menuLayout->addWidget(recentsButton);;
+    //menuLayout->addWidget(allRoomsButton);
+    //menuLayout->addWidget(myRoomsButton);
+    //menuLayout->addWidget(searchEdit);
 }
 
 void MainWindow::connectToDb()
@@ -174,8 +215,8 @@ void MainWindow::showAllRooms()
     QItemSelection selection(topLeft, bottomRight);
     categoryView->selectionModel()->select(selection,
                                            QItemSelectionModel::SelectionFlag::Select | QItemSelectionModel::SelectionFlag::Rows);
-    grid->addWidget(categoryView, 0, 0);
-    grid->addLayout(roomLayout, 0, 1);
+    grid->addWidget(categoryView, 1, 0, Qt::AlignJustify);
+    grid->addLayout(roomLayout, 1, 1, Qt::AlignJustify);
 }
 
 void MainWindow::showMyRooms()

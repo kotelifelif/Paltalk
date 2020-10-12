@@ -41,6 +41,15 @@ private:
     QAction *allRoomsAction;
     QAction *myRoomsAction;
 
+    // Room Browser new elements
+    QTabWidget *tabWidget;
+    QWidget *recentsButton;
+    QWidget *allRoomsButton;
+    QWidget *myRoomsButton;
+    QWidget *searchEdit;
+
+
+
     QSqlDatabase db;
 
     QGridLayout *grid;
