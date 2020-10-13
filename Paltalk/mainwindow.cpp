@@ -23,6 +23,7 @@ MainWindow::MainWindow()
     QWidget *widget = new QWidget;
     setCentralWidget(widget);
     widget->setLayout(grid);
+    setStyleSheet(StyleManager::getMainWindowStyle());
 
     createActions();
     connectToDb();
@@ -52,8 +53,8 @@ void MainWindow::createActions()
     //menuBar()->addAction(myRoomsAction);
 
 
-    QFont menuBarFont;
-    menuBarFont.setPointSize(11);
+    QFont tabFont;
+    tabFont.setPointSize(11);
     //menuBar()->setFont(menuBarFont);
     //menuBar()->setStyleSheet();
 
@@ -76,6 +77,8 @@ void MainWindow::createActions()
     //searchEdit->setText("Search Room");
 
     tabWidget = new QTabWidget;
+    tabWidget->setStyleSheet(StyleManager::getTabWidgetStyle());
+    tabWidget->setFont(tabFont);
     tabWidget->addTab(new RecentsTab(), "Recents");
     tabWidget->addTab(new AllRoomsTab(), "All Rooms");
     tabWidget->addTab(new MyRoomsTab(), "My Rooms");

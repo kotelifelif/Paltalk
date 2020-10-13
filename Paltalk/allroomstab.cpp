@@ -5,6 +5,7 @@
 #include "category.h"
 #include "subcategory.h"
 #include "room.h"
+#include "stylemanager.h"
 
 #include <QtSql>
 #include <QUuid>
@@ -65,6 +66,7 @@ AllRoomsTab::AllRoomsTab(QWidget *parent) :
 
     QTreeView *categoryView = new QTreeView;
     categoryView->setModel(categoryModel);
+    categoryView->setStyleSheet(StyleManager::getTreeViewStyle());
     categoryView->expandAll();
 
     connect(categoryView->selectionModel(),
@@ -125,7 +127,7 @@ void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const
         Room room(roomId, name, ownerId, subcategoryId);
         QLabel *roomLabel = new QLabel;
         roomLabel->setText(room.Name);
+        roomLabel->setStyleSheet(StyleManager::getLabelStyle());
         roomLayout->addWidget(roomLabel);
     }
-    int a = 0;
 }

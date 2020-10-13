@@ -6,8 +6,11 @@
 class StyleManager
 {
 public:
-    static QString getToolButtonStyle();
+    static QString getTabWidgetStyle();
     static QString getWidgetStyle();
+    static QString getLabelStyle();
+    static QString getTreeViewStyle();
+    static QString getMainWindowStyle();
 
 };
 

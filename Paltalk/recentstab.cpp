@@ -1,6 +1,7 @@
 #include "recentstab.h"
 #include "user.h"
 #include "room.h"
+#include "stylemanager.h"
 
 #include <QLabel>
 
@@ -27,6 +28,7 @@ RecentsTab::RecentsTab(QWidget *parent):
         if (userId == user.UserId) {
             Room room(roomId, name, ownerId);
             QLabel *roomLabel = new QLabel;
+            roomLabel->setStyleSheet(StyleManager::getLabelStyle());
             roomLabel->setText(room.Name);
             roomLayout->addWidget(roomLabel);
         }
