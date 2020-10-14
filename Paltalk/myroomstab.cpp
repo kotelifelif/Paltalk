@@ -48,6 +48,14 @@ MyRoomsTab::MyRoomsTab(QSqlDatabase &db, QWidget *parent) :
     setLayout(grid);
 }
 
+MyRoomsTab::~MyRoomsTab()
+{
+    clearItems(followRoomLayout);
+    clearItems(adminRoomLayout);
+    clearItems(grid);
+    delete grid;
+}
+
 void MyRoomsTab::updateLayouts()
 {
     clearItems(adminRoomLayout);

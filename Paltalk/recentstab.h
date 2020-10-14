@@ -5,12 +5,14 @@
 #include <QtSql>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QLabel>
 
 class RecentsTab : public AbstractTab
 {
     Q_OBJECT
 public:
     explicit RecentsTab(QSqlDatabase &db, QWidget *parent = nullptr);
+    virtual ~RecentsTab();
     void updateLayouts();
 private:
     QVBoxLayout *roomLayout;

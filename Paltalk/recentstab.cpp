@@ -12,6 +12,11 @@ RecentsTab::RecentsTab(QSqlDatabase &db, QWidget *parent):
     updateLayouts();
     // Разделитель
     grid->addLayout(roomLayout, 0, 0);
+    QLabel *titleLabel = new QLabel;
+    titleLabel->setText("Recents");
+    titleLabel->setObjectName("TitleLabel");
+    titleLabel->setStyleSheet(StyleManager::getTitleStyle());
+    roomLayout->addWidget(titleLabel);
     QSqlRelationalTableModel *roomsModel = new QSqlRelationalTableModel(nullptr, db);
     roomsModel->setTable("\"Users_Rooms\"");
     roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"RoomID\", \"Name\", \"OwnerID\", \"SubcategoryID\""));
@@ -27,13 +32,33 @@ RecentsTab::RecentsTab(QSqlDatabase &db, QWidget *parent):
 
         if (userId == user.UserId) {
             Room room(roomId, name, ownerId);
+
             QLabel *roomLabel = new QLabel;
             roomLabel->setStyleSheet(StyleManager::getLabelStyle());
             roomLabel->setText(room.Name);
+
+            // Добавим комнату как вприложении
+            QHBoxLayout *roomItemLayout = new QHBoxLayout;
+            QImage image("path_to_image_of_room");
+            QLabel *imageLabel = new QLabel;
+            imageLabel->setPixmap(QPixmap::fromImage(image));
+            imageLabel->resize(25, 25);
+            roomItemLayout->addWidget(imageLabel);
+            roomItemLayout->addWidget(roomLabel);
+            roomItemLayout->addSpacing(20);
+
+            //
             roomLayout->addWidget(roomLabel);
         }
     }
     setLayout(grid);
+}
+
+RecentsTab::~RecentsTab()
+{
+    clearItems(roomLayout);
+    clearItems(grid);
+    delete grid;
 }
 
 void RecentsTab::updateLayouts()

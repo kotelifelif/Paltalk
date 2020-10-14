@@ -68,6 +68,9 @@ AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
 
     categoryView = new QTreeView;
     categoryView->setModel(categoryModel);
+    categoryView->setStyleSheet(StyleManager::getTreeViewStyle());
+    categoryView->hideColumn(1);
+    categoryView->hideColumn(2);
     categoryView->expandAll();
 
     connect(categoryView->selectionModel(),
@@ -96,7 +99,9 @@ AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
 
 AllRoomsTab::~AllRoomsTab()
 {
-
+    clearItems(roomLayout);
+    clearItems(grid);
+    delete grid;
 }
 
 void AllRoomsTab::updateLayouts()
@@ -111,6 +116,10 @@ void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const
 {
     Q_UNUSED(deselectedItem);
     //updateLayouts();
+    QModelIndex index = selectedItem.indexes().at(2);
+    QUuid subcategoryId = index.data().toUuid();
+    if (subcategoryId == QUuid())
+        return;
     clearItems(roomLayout);
     // Для отображения комнат
     QList<QModelIndex> indexes = selectedItem.indexes();
@@ -124,8 +133,6 @@ void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const
         QUuid ownerId = roomModel->record(i).value("OwnerID").toUuid();
         QUuid roomSubcategoryId = roomModel->record(i).value("SubcategoryID").toUuid();
 
-        QModelIndex index = selectedItem.indexes().at(2);
-        QUuid subcategoryId = index.data().toUuid();
 
         if (subcategoryId != roomSubcategoryId)
             continue;

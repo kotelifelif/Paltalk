@@ -4,6 +4,7 @@ QString StyleManager::getTabWidgetStyle()
 {
     return QString("QTabWidget {"
                    "width: 870px;"
+                   "background-color: #366190;"
                    "}"
 
                    "QTabWidget::tab-bar:top {"
@@ -25,13 +26,11 @@ QString StyleManager::getTabWidgetStyle()
                    "QTabBar::tab {"
                        "background-color: #366190;"
                        "height: 54px;"
-                       "width: 290px;"
                    "}"
 
                    "QTabBar::tab:selected {"
                        "background: #366190;"
                        "color: #9abed8;"
-                       "text-decoration: underline;"
                    "}"
 
                    "QTabBar::tab:!selected {"
@@ -101,4 +100,12 @@ QString StyleManager::getTreeViewStyle()
 QString StyleManager::getMainWindowStyle()
 {
     return QString("background-color: #f2f2f2;");
+}
+
+QString StyleManager::getTitleStyle()
+{
+    return QString("QLabel#TitleLabel {"
+                   "font-size: 15px;"
+                   "color: #808080;"
+                   "}");
 }

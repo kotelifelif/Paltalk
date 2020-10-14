@@ -12,6 +12,7 @@ class MyRoomsTab : public AbstractTab
     Q_OBJECT
 public:
     explicit MyRoomsTab(QSqlDatabase &db, QWidget *parent = nullptr);
+    virtual ~MyRoomsTab();
     void updateLayouts();
 private:
     QVBoxLayout *followRoomLayout;

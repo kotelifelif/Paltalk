@@ -21,11 +21,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
     ~MainWindow();
-private slots:
-    void showRecents();
-    void showAllRooms();
-    void showMyRooms();
-    void showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem);
 private:
     void connectToDb();
     void updateLayouts();
@@ -33,22 +28,12 @@ private:
     void createMenus();
     void clearItems(QLayout *layout);
 
-    QMenu *recentsMenu;
-    QMenu *allRoomsMenu;
-    QMenu *myRoomsMenu;
-
-    QAction *recentsAction;
-    QAction *allRoomsAction;
-    QAction *myRoomsAction;
-
     // Room Browser new elements
     QTabWidget *tabWidget;
     QWidget *recentsButton;
     QWidget *allRoomsButton;
     QWidget *myRoomsButton;
     QWidget *searchEdit;
-
-
 
     QSqlDatabase db;
 

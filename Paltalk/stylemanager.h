@@ -11,6 +11,7 @@ public:
     static QString getLabelStyle();
     static QString getTreeViewStyle();
     static QString getMainWindowStyle();
+    static QString getTitleStyle();
 
 };
 
