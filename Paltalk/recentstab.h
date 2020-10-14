@@ -10,11 +10,12 @@ class RecentsTab : public AbstractTab
 {
     Q_OBJECT
 public:
-    explicit RecentsTab(QWidget *parent = nullptr);
+    explicit RecentsTab(QSqlDatabase &db, QWidget *parent = nullptr);
     void updateLayouts();
 private:
     QVBoxLayout *roomLayout;
     QGridLayout *grid;
+    QSqlDatabase db;
 };
 
 #endif // RECENTSTAB_H

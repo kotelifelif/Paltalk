@@ -25,8 +25,8 @@ MainWindow::MainWindow()
     widget->setLayout(grid);
     setStyleSheet(StyleManager::getMainWindowStyle());
 
-    createActions();
     connectToDb();
+    createActions();
     //this->setStyleSheet(StyleManager::getWidgetStyle());
 
     resize(870, 630);
@@ -79,9 +79,9 @@ void MainWindow::createActions()
     tabWidget = new QTabWidget;
     tabWidget->setStyleSheet(StyleManager::getTabWidgetStyle());
     tabWidget->setFont(tabFont);
-    tabWidget->addTab(new RecentsTab(), "Recents");
-    tabWidget->addTab(new AllRoomsTab(), "All Rooms");
-    tabWidget->addTab(new MyRoomsTab(), "My Rooms");
+    tabWidget->addTab(new RecentsTab(db), "Recents");
+    tabWidget->addTab(new AllRoomsTab(db), "All Rooms");
+    tabWidget->addTab(new MyRoomsTab(db), "My Rooms");
     grid->addWidget(tabWidget, 0, 0);
     //connect(allRoomsButton, &QAction::triggered, this, &MainWindow::showMyRooms);
     //grid->addLayout(tabWidget, 0, 0, Qt::AlignTop);

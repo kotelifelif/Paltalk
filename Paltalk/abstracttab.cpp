@@ -1,15 +1,14 @@
 #include "abstracttab.h"
 
 #include <QLayout>
+#include <QtWidgets>
 
 AbstractTab::AbstractTab(QWidget *parent) : QWidget(parent)
 {
-    connectToDb();
 }
 
 AbstractTab::~AbstractTab()
 {
-    db.close();
 }
 
 void AbstractTab::clearItems(QLayout *layout)
@@ -19,14 +18,4 @@ void AbstractTab::clearItems(QLayout *layout)
         delete child->widget(); // delete the widget
         delete child;   // delete the layout item
     }
-}
-
-void AbstractTab::connectToDb()
-{
-    db = QSqlDatabase::addDatabase("QPSQL");
-    db.setDatabaseName("Paltalk");
-    db.setUserName("postgres");
-    db.setHostName("localhost");
-    db.setPassword("12345");
-    db.open();
 }

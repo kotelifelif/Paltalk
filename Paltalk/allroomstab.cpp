@@ -16,9 +16,10 @@
 #include <QLabel>
 
 
-AllRoomsTab::AllRoomsTab(QWidget *parent) :
+AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
     roomLayout(new QVBoxLayout),
-    grid(new QGridLayout)
+    grid(new QGridLayout),
+    db(db)
 {
     updateLayouts();
     // Для отображения категорий и подкатегорий
@@ -64,7 +65,7 @@ AllRoomsTab::AllRoomsTab(QWidget *parent) :
         }
     }
 
-    QTreeView *categoryView = new QTreeView;
+    categoryView = new QTreeView;
     categoryView->setModel(categoryModel);
     categoryView->setStyleSheet(StyleManager::getTreeViewStyle());
     categoryView->expandAll();
@@ -94,16 +95,23 @@ AllRoomsTab::AllRoomsTab(QWidget *parent) :
     setLayout(grid);
 }
 
+AllRoomsTab::~AllRoomsTab()
+{
+
+}
+
 void AllRoomsTab::updateLayouts()
 {
     clearItems(roomLayout);
     clearItems(grid);
     roomLayout = new QVBoxLayout;
+    grid = new QGridLayout;
 }
 
 void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const QItemSelection &deselectedItem)
 {
     Q_UNUSED(deselectedItem);
+    //updateLayouts();
     clearItems(roomLayout);
     roomLayout = new QVBoxLayout;
     // Для отображения комнат
@@ -130,4 +138,5 @@ void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const
         roomLabel->setStyleSheet(StyleManager::getLabelStyle());
         roomLayout->addWidget(roomLabel);
     }
+    int a = 0;
 }

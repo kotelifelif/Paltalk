@@ -5,7 +5,7 @@
 
 #include <QLabel>
 
-RecentsTab::RecentsTab(QWidget *parent):
+RecentsTab::RecentsTab(QSqlDatabase &db, QWidget *parent):
     roomLayout(new QVBoxLayout),
     grid(new QGridLayout)
 {

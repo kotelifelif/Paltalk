@@ -1,15 +1,15 @@
 #include "myroomstab.h"
 #include "user.h"
 #include "room.h"
-#include "stylemanager.h"
 
 #include <QLabel>
 
 
-MyRoomsTab::MyRoomsTab(QWidget *parent) :
+MyRoomsTab::MyRoomsTab(QSqlDatabase &db, QWidget *parent) :
     followRoomLayout(new QVBoxLayout),
     adminRoomLayout(new QVBoxLayout),
-    grid(new QGridLayout)
+    grid(new QGridLayout),
+    db(db)
 {
     updateLayouts();
     QSqlRelationalTableModel *roomsModel = new QSqlRelationalTableModel(nullptr, db);
@@ -31,7 +31,6 @@ MyRoomsTab::MyRoomsTab(QWidget *parent) :
             Room room(roomId, name, ownerId);
             QLabel *roomLabel = new QLabel;
             roomLabel->setText(room.Name);
-            roomLabel->setStyleSheet(StyleManager::getLabelStyle());
             if (userId == ownerId && isAdmin)
                 adminRoomLayout->addWidget(roomLabel);
             else if (isFollowed)
