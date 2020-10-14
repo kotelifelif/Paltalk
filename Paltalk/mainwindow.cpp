@@ -83,6 +83,7 @@ void MainWindow::createActions()
     tabWidget->addTab(new AllRoomsTab(db), "All Rooms");
     tabWidget->addTab(new MyRoomsTab(db), "My Rooms");
     grid->addWidget(tabWidget, 0, 0);
+    qDebug() << tabWidget->objectName();
     //connect(allRoomsButton, &QAction::triggered, this, &MainWindow::showMyRooms);
     //grid->addLayout(tabWidget, 0, 0, Qt::AlignTop);
     //menuLayout->addWidget(recentsButton);;

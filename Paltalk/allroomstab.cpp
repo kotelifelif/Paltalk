@@ -8,6 +8,7 @@
 #include "stylemanager.h"
 
 #include <QtSql>
+#include <QModelIndex>
 #include <QUuid>
 #include <QString>
 #include <QTreeView>
@@ -67,7 +68,6 @@ AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
 
     categoryView = new QTreeView;
     categoryView->setModel(categoryModel);
-    categoryView->setStyleSheet(StyleManager::getTreeViewStyle());
     categoryView->expandAll();
 
     connect(categoryView->selectionModel(),
@@ -89,7 +89,6 @@ AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
     QItemSelection selection(topLeft, bottomRight);
     categoryView->selectionModel()->select(selection,
                                            QItemSelectionModel::SelectionFlag::Select | QItemSelectionModel::SelectionFlag::Rows);
-    roomLayout->addWidget(categoryView);
     grid->addWidget(categoryView, 0, 0);
     grid->addLayout(roomLayout, 0, 1);
     setLayout(grid);
@@ -113,7 +112,6 @@ void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const
     Q_UNUSED(deselectedItem);
     //updateLayouts();
     clearItems(roomLayout);
-    roomLayout = new QVBoxLayout;
     // Для отображения комнат
     QList<QModelIndex> indexes = selectedItem.indexes();
     QSqlRelationalTableModel *roomModel = new QSqlRelationalTableModel(nullptr, db);
@@ -138,5 +136,4 @@ void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const
         roomLabel->setStyleSheet(StyleManager::getLabelStyle());
         roomLayout->addWidget(roomLabel);
     }
-    int a = 0;
 }

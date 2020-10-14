@@ -25,6 +25,7 @@ QString StyleManager::getTabWidgetStyle()
                    "QTabBar::tab {"
                        "background-color: #366190;"
                        "height: 54px;"
+                       "width: 290px;"
                    "}"
 
                    "QTabBar::tab:selected {"
