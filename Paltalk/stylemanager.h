@@ -12,6 +12,10 @@ public:
     static QString getTreeViewStyle();
     static QString getMainWindowStyle();
     static QString getTitleStyle();
+    static QString getIconStyle();
+    static QString getAllButtonStyle();
+    static QString getOpenButtonStyle();
+    static QString getCornerWidgetStyle();
 
 };
 

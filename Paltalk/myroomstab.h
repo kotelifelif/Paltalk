@@ -6,6 +6,9 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QtSql>
+#include <QLabel>
+#include <QLayout>
+#include <QString>
 
 class MyRoomsTab : public AbstractTab
 {

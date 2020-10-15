@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/all_active_icon.png</file>
+        <file>images/all_not_active_icon.png</file>
+        <file>images/deluxe_icon.png</file>
+        <file>images/followers_icon.png</file>
+        <file>images/members_icon.png</file>
+        <file>images/open_active_icon.png</file>
+        <file>images/open_not_active_icon.png</file>
+        <file>images/room_icon.png</file>
+        <file>images/video_icon.png</file>
+    </qresource>
+</RCC>

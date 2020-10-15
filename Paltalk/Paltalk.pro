@@ -47,4 +47,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    Ff.qml
+    Ff.qml \
+    images/deluxe_icon.png \
+    images/followers_icon.png \
+    images/members_icon.png \
+    images/room_icon.png \
+    images/video_icon.png
+
+RESOURCES += \
+    application.qrc

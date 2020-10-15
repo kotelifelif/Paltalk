@@ -51,6 +51,8 @@ void MainWindow::createActions()
     tabWidget->addTab(new MyRoomsTab(db), "My Rooms");
 
     QWidget *cornerWidget = new QWidget;
+    cornerWidget->setObjectName("Corner");
+    cornerWidget->setStyleSheet(StyleManager::getCornerWidgetStyle());
     QHBoxLayout *cornerLayout = new QHBoxLayout(cornerWidget);
     cornerLayout->addWidget(searchEdit);
     QCheckBox *adultFilter = new QCheckBox;

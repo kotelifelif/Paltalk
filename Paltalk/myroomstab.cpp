@@ -1,6 +1,7 @@
 #include "myroomstab.h"
 #include "user.h"
 #include "room.h"
+#include "stylemanager.h"
 
 #include <QLabel>
 
@@ -12,6 +13,17 @@ MyRoomsTab::MyRoomsTab(QSqlDatabase &db, QWidget *parent) :
     db(db)
 {
     updateLayouts();
+
+    QLabel *adminRoomLabel = new QLabel("Rooms I admin");
+    adminRoomLabel->setObjectName("TitleLabel");
+    adminRoomLabel->setStyleSheet(StyleManager::getTitleStyle());
+    adminRoomLayout->addWidget(adminRoomLabel);
+
+    QLabel *followRoomLabel = new QLabel("Rooms I follow");
+    followRoomLabel->setObjectName("TitleLabel");
+    followRoomLabel->setStyleSheet(StyleManager::getTitleStyle());
+    followRoomLayout->addWidget(followRoomLabel);
+
     QSqlRelationalTableModel *roomsModel = new QSqlRelationalTableModel(nullptr, db);
     roomsModel->setTable("\"Users_Rooms\"");
     roomsModel->setRelation(1, QSqlRelation("\"Rooms\"", "\"RoomID\"", "\"RoomID\", \"Name\", \"OwnerID\", \"SubcategoryID\""));
@@ -29,12 +41,10 @@ MyRoomsTab::MyRoomsTab(QSqlDatabase &db, QWidget *parent) :
 
         if (userId == user.UserId) {
             Room room(roomId, name, ownerId);
-            QLabel *roomLabel = new QLabel;
-            roomLabel->setText(room.Name);
             if (userId == ownerId && isAdmin)
-                adminRoomLayout->addWidget(roomLabel);
+                addRoom(adminRoomLayout, room.Name);
             else if (isFollowed)
-                followRoomLayout->addWidget(roomLabel);
+                addRoom(followRoomLayout, room.Name);
         }
     }
     // Разделитель
@@ -50,8 +60,6 @@ MyRoomsTab::MyRoomsTab(QSqlDatabase &db, QWidget *parent) :
 
 MyRoomsTab::~MyRoomsTab()
 {
-    clearItems(followRoomLayout);
-    clearItems(adminRoomLayout);
     clearItems(grid);
     delete grid;
 }

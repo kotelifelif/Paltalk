@@ -4,16 +4,29 @@
 #include "stylemanager.h"
 
 #include <QLabel>
+#include <QRadioButton>
 
 RecentsTab::RecentsTab(QSqlDatabase &db, QWidget *parent):
     roomLayout(new QVBoxLayout),
     grid(new QGridLayout)
 {
     updateLayouts();
-    // Разделитель
-    grid->addLayout(roomLayout, 0, 0);
+
+    QHBoxLayout *titleLayout = new QHBoxLayout;
+    grid->addLayout(titleLayout, 0, 0);
     QLabel *titleLabel = new QLabel;
     titleLabel->setText("Recents");
+    titleLayout->addWidget(titleLabel);
+    titleLayout->addSpacerItem(new QSpacerItem(660, 10));
+    QRadioButton *allButton = new QRadioButton;
+    allButton->setStyleSheet(StyleManager::getAllButtonStyle());
+    allButton->setObjectName("All");
+    titleLayout->addWidget(allButton);
+    QRadioButton *openButton = new QRadioButton;
+    openButton->setObjectName("Open");
+    openButton->setStyleSheet(StyleManager::getOpenButtonStyle());
+    titleLayout->addWidget(openButton);
+    grid->addLayout(roomLayout, 1, 0);
     titleLabel->setObjectName("TitleLabel");
     titleLabel->setStyleSheet(StyleManager::getTitleStyle());
     roomLayout->addWidget(titleLabel);
@@ -34,21 +47,9 @@ RecentsTab::RecentsTab(QSqlDatabase &db, QWidget *parent):
             Room room(roomId, name, ownerId);
 
             QLabel *roomLabel = new QLabel;
-            roomLabel->setStyleSheet(StyleManager::getLabelStyle());
-            roomLabel->setText(room.Name);
-
-            // Добавим комнату как вприложении
-            QHBoxLayout *roomItemLayout = new QHBoxLayout;
-            QImage image("path_to_image_of_room");
-            QLabel *imageLabel = new QLabel;
-            imageLabel->setPixmap(QPixmap::fromImage(image));
-            imageLabel->resize(25, 25);
-            roomItemLayout->addWidget(imageLabel);
-            roomItemLayout->addWidget(roomLabel);
-            roomItemLayout->addSpacing(20);
-
+            addRoom(roomLayout, room.Name);
             //
-            roomLayout->addWidget(roomLabel);
+            //roomLayout->addWidget(roomLabel);
         }
     }
     setLayout(grid);
@@ -56,7 +57,6 @@ RecentsTab::RecentsTab(QSqlDatabase &db, QWidget *parent):
 
 RecentsTab::~RecentsTab()
 {
-    clearItems(roomLayout);
     clearItems(grid);
     delete grid;
 }
@@ -68,5 +68,7 @@ void RecentsTab::updateLayouts()
     roomLayout = new QVBoxLayout;
     grid = new QGridLayout;
 }
+
+
 
 

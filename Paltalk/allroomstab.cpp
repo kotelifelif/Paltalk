@@ -66,7 +66,7 @@ AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
         }
     }
 
-    categoryView = new QTreeView;
+    categoryView = new QTreeView;    
     categoryView->setModel(categoryModel);
     categoryView->setStyleSheet(StyleManager::getTreeViewStyle());
     categoryView->hideColumn(1);
@@ -138,9 +138,10 @@ void AllRoomsTab::showSubcategoryRooms(const QItemSelection &selectedItem, const
             continue;
 
         Room room(roomId, name, ownerId, subcategoryId);
-        QLabel *roomLabel = new QLabel;
-        roomLabel->setText(room.Name);
-        roomLabel->setStyleSheet(StyleManager::getLabelStyle());
-        roomLayout->addWidget(roomLabel);
+        addRoom(roomLayout, room.Name);
+        //QLabel *roomLabel = new QLabel;
+        //roomLabel->setText(room.Name);
+        //roomLabel->setStyleSheet(StyleManager::getLabelStyle());
+        //roomLayout->addWidget(roomLabel);
     }
 }
