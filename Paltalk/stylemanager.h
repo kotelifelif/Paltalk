@@ -21,6 +21,7 @@ public:
     static QString getAchievementButtonStyle();
     static QString getVideosCountButtonStyle();
     static QString getToolTipStyle();
+    static QString getCheckBoxStyle();
 
 };
 

@@ -17,5 +17,7 @@
         <file>images/relevance_not_active_icon.png</file>
         <file>images/videos_count_active_icon.png</file>
         <file>images/videos_count_not_active_icon.png</file>
+        <file>images/adult_active_icon.png</file>
+        <file>images/adult_not_active_icon.png</file>
     </qresource>
 </RCC>

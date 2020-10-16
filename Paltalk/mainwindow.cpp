@@ -56,6 +56,7 @@ void MainWindow::createActions()
     QHBoxLayout *cornerLayout = new QHBoxLayout(cornerWidget);
     cornerLayout->addWidget(searchEdit);
     QCheckBox *adultFilter = new QCheckBox;
+    adultFilter->setStyleSheet(StyleManager::getCheckBoxStyle());
     cornerLayout->addWidget(adultFilter);
     tabWidget->setCornerWidget(cornerWidget);
 

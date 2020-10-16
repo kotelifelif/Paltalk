@@ -27,7 +27,7 @@ QString StyleManager::getTabWidgetStyle()
                        "font-size: 13px;"
                        "background-color: #366190;"
                        "height: 40px;"
-                       "width: 235px;"
+                       "width: 219px;"
                    "}"
 
                    "QTabBar::tab:selected {"
@@ -192,5 +192,24 @@ QString StyleManager::getToolTipStyle()
                    "color: white;"
                    "background-color: black;"
                    "border: 1px solid black;"
+                   "}");
+}
+
+QString StyleManager::getCheckBoxStyle()
+{
+    return QString("QCheckBox {"
+                   "background-color: #366190;"
+                   "}"
+                   "QCheckBox::indicator {"
+                   "width: 55px;"
+                   "height: 30px;"
+                   "}"
+
+                   "QCheckBox::indicator:unchecked {"
+                   "image: url(:/images/adult_not_active_icon.png);"
+                   "}"
+
+                   "QCheckBox::indicator:checked {"
+                   "image: url(:/images/adult_active_icon.png);"
                    "}");
 }
