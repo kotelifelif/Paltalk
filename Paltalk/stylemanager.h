@@ -16,6 +16,11 @@ public:
     static QString getAllButtonStyle();
     static QString getOpenButtonStyle();
     static QString getCornerWidgetStyle();
+    static QString getRelevanceButtonStyle();
+    static QString getMembersCountButtonStyle();
+    static QString getAchievementButtonStyle();
+    static QString getVideosCountButtonStyle();
+    static QString getToolTipStyle();
 
 };
 

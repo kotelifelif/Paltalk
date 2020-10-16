@@ -15,6 +15,7 @@
 #include <QSqlRelationalTableModel>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QRadioButton>
 
 
 AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
@@ -23,6 +24,38 @@ AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
     db(db)
 {
     updateLayouts();
+    QHBoxLayout *titleLayout = new QHBoxLayout;
+    grid->addLayout(titleLayout, 0, 0);
+    QLabel *categoryLabel = new QLabel;
+    categoryLabel->setText("Recents");
+    categoryLabel->setObjectName("TitleLabel");
+    categoryLabel->setStyleSheet(StyleManager::getTitleStyle());
+    titleLayout->addWidget(categoryLabel);
+    titleLayout->addSpacerItem(new QSpacerItem(660, 10));
+
+    QRadioButton *relevanceButton = new QRadioButton;
+    relevanceButton->setObjectName("Relevance");
+    relevanceButton->setToolTip("Sort rooms by relevance");
+    relevanceButton->setStyleSheet(StyleManager::getRelevanceButtonStyle() + StyleManager::getToolTipStyle());
+    titleLayout->addWidget(relevanceButton);
+
+    QRadioButton *membersCountButton = new QRadioButton;
+    membersCountButton->setObjectName("MembersCount");
+    membersCountButton->setToolTip("Sort rooms by members count");
+    membersCountButton->setStyleSheet(StyleManager::getMembersCountButtonStyle() + StyleManager::getToolTipStyle());
+    titleLayout->addWidget(membersCountButton);
+
+    QRadioButton *achievementButton = new QRadioButton;
+    achievementButton->setObjectName("Achievement");
+    achievementButton->setToolTip("Sort rooms by level achievement");
+    achievementButton->setStyleSheet(StyleManager::getAchievementButtonStyle() + StyleManager::getToolTipStyle());
+    titleLayout->addWidget(achievementButton);
+
+    QRadioButton *videosCountButton = new QRadioButton;
+    videosCountButton->setObjectName("VideosCount");
+    videosCountButton->setToolTip("Sort rooms by live videos count");
+    videosCountButton->setStyleSheet(StyleManager::getVideosCountButtonStyle() + StyleManager::getToolTipStyle());
+    titleLayout->addWidget(videosCountButton);
     // Для отображения категорий и подкатегорий
     // Выбор категорий
     QSqlRelationalTableModel *categoriesModel = new QSqlRelationalTableModel(nullptr, db);
@@ -92,8 +125,8 @@ AllRoomsTab::AllRoomsTab(QSqlDatabase &db, QWidget *parent) :
     QItemSelection selection(topLeft, bottomRight);
     categoryView->selectionModel()->select(selection,
                                            QItemSelectionModel::SelectionFlag::Select | QItemSelectionModel::SelectionFlag::Rows);
-    grid->addWidget(categoryView, 0, 0);
-    grid->addLayout(roomLayout, 0, 1);
+    grid->addWidget(categoryView, 1, 0);
+    grid->addLayout(roomLayout, 1, 1);
     setLayout(grid);
 }
 

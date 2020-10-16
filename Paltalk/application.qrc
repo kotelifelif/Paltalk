@@ -9,5 +9,13 @@
         <file>images/open_not_active_icon.png</file>
         <file>images/room_icon.png</file>
         <file>images/video_icon.png</file>
+        <file>images/achievement_active_icon.png</file>
+        <file>images/achievement_not_active_icon.png</file>
+        <file>images/members_count_active_icon.png</file>
+        <file>images/members_count_not_active_icon.png</file>
+        <file>images/relevance_active_icon.png</file>
+        <file>images/relevance_not_active_icon.png</file>
+        <file>images/videos_count_active_icon.png</file>
+        <file>images/videos_count_not_active_icon.png</file>
     </qresource>
 </RCC>

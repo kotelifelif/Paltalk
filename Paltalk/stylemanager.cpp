@@ -145,3 +145,52 @@ QString StyleManager::getCornerWidgetStyle()
                    "background-color: #366190;"
                    "}");
 }
+
+QString StyleManager::getRelevanceButtonStyle()
+{
+    return QString("QRadioButton#Relevance::indicator::checked {"
+                   "image: url(:/images/relevance_active_icon.png);"
+                   "}"
+                   "QRadioButton#Relevance::indicator::unchecked {"
+                   "image: url(:/images/relevance_not_active_icon.png);"
+                   "}");
+}
+
+QString StyleManager::getMembersCountButtonStyle()
+{
+    return QString("QRadioButton#MembersCount::indicator::checked {"
+                   "image: url(:/images/members_count_active_icon.png);"
+                   "}"
+                   "QRadioButton#MembersCount::indicator::unchecked {"
+                   "image: url(:/images/members_count_not_active_icon.png);"
+                   "}");
+}
+
+QString StyleManager::getAchievementButtonStyle()
+{
+    return QString("QRadioButton#Achievement::indicator::checked {"
+                   "image: url(:/images/achievement_active_icon.png);"
+                   "}"
+                   "QRadioButton#Achievement::indicator::unchecked {"
+                   "image: url(:/images/achievement_not_active_icon.png);"
+                   "}");
+}
+
+QString StyleManager::getVideosCountButtonStyle()
+{
+    return QString("QRadioButton#VideosCount::indicator::checked {"
+                   "image: url(:/images/videos_count_active_icon.png);"
+                   "}"
+                   "QRadioButton#VideosCount::indicator::unchecked {"
+                   "image: url(:/images/videos_count_not_active_icon.png);"
+                   "}");
+}
+
+QString StyleManager::getToolTipStyle()
+{
+    return QString(" QToolTip {"
+                   "color: white;"
+                   "background-color: black;"
+                   "border: 1px solid black;"
+                   "}");
+}
